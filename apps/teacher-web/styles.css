@@ -1,0 +1,26 @@
+:root { color-scheme: light; font-family: "Segoe UI", "Malgun Gothic", sans-serif; color: #172033; background: #f4f7fb; }
+* { box-sizing: border-box; }
+body { margin: 0; min-height: 100vh; }
+main { width: min(1100px, calc(100% - 40px)); margin: 0 auto; padding: 52px 0; }
+header { display: flex; justify-content: space-between; gap: 24px; align-items: flex-start; margin-bottom: 36px; }
+.eyebrow { color: #596de9; letter-spacing: .14em; font-weight: 700; font-size: 12px; margin: 0 0 10px; }
+h1 { font-size: clamp(30px, 4vw, 44px); margin: 0; letter-spacing: -.04em; }
+.subtitle { color: #657087; margin: 12px 0 0; }
+.status { padding: 9px 14px; border-radius: 999px; font-size: 14px; font-weight: 700; }
+.status.online { background: #dcf8e8; color: #167246; }
+.status.connecting { background: #fff2cc; color: #865f00; }
+.status.offline { background: #ffe1e1; color: #9d2929; }
+.summary { display: flex; justify-content: space-between; align-items: baseline; padding: 22px 26px; background: #24345c; color: white; border-radius: 18px; box-shadow: 0 12px 30px #263b6630; margin-bottom: 24px; }
+.summary strong { font-size: 30px; }
+.empty { text-align: center; background: white; border: 1px dashed #cbd3e1; border-radius: 18px; padding: 70px 20px; color: #68748a; }
+.empty-icon { font-size: 52px; color: #91a0bb; }
+.empty h2 { color: #35415a; font-size: 20px; margin: 10px 0; }
+.empty p { margin: 0; }
+.student-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; }
+.student-card { background: white; border: 1px solid #e2e7ef; border-radius: 16px; padding: 20px; box-shadow: 0 5px 16px #2a3d6010; }
+.card-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.student-name { font-size: 19px; font-weight: 750; }
+.online-dot { width: 10px; height: 10px; background: #25ba74; border-radius: 50%; box-shadow: 0 0 0 5px #25ba741b; }
+.device { margin: 12px 0 0; font-size: 13px; color: #768197; }
+.connected { margin: 5px 0 0; font-size: 12px; color: #9aa3b4; }
+@media (max-width: 620px) { header { flex-direction: column; } main { padding-top: 30px; } }

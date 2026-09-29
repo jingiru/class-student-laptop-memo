@@ -1,0 +1,20 @@
+:root { font-family: "Segoe UI", "Malgun Gothic", sans-serif; color: #172033; background: #f4f7fb; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { padding: 45px 42px; }
+.eyebrow { color: #596de9; letter-spacing: .12em; font-weight: 700; font-size: 11px; }
+h1 { margin: 8px 0; font-size: 34px; letter-spacing: -.04em; }
+.lead { color: #6a758a; margin: 0 0 30px; }
+form { display: grid; gap: 18px; }
+label { font-size: 13px; font-weight: 700; color: #3f4b62; }
+input { width: 100%; padding: 13px 14px; margin-top: 7px; border: 1px solid #ccd4e1; border-radius: 10px; background: white; font: inherit; outline: none; }
+input:focus { border-color: #6579ef; box-shadow: 0 0 0 3px #6579ef20; }
+button { border: 0; border-radius: 11px; padding: 14px; color: white; background: #5369e8; font-size: 15px; font-weight: 750; cursor: pointer; }
+button:hover { background: #4359d1; }
+.connection-card { display: flex; gap: 14px; align-items: center; margin-top: 24px; padding: 17px; background: white; border: 1px solid #e1e6ef; border-radius: 12px; }
+.indicator { width: 12px; height: 12px; border-radius: 50%; background: #a7afbd; flex: none; }
+.connection-card.online .indicator { background: #22b873; box-shadow: 0 0 0 5px #22b87320; }
+.connection-card.connecting .indicator { background: #e5a91e; }
+.connection-card.error .indicator, .connection-card.offline .indicator { background: #d84c4c; }
+.connection-card p { margin: 4px 0 0; color: #778196; font-size: 12px; }
+.device-info { text-align: center; color: #9ba4b4; font-size: 11px; margin-top: 20px; }

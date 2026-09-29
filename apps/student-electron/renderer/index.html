@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Classroom Guide · 학생</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">CLASSROOM GUIDE · STUDENT</p>
+      <h1>수업에 참여하기</h1>
+      <p class="lead">교사가 알려준 서버 주소와 이름을 입력하세요.</p>
+      <form id="join-form">
+        <label>교사 서버 주소<input id="server-url" type="url" placeholder="http://192.168.0.10:3001" required /></label>
+        <label>학생 이름<input id="student-name" type="text" maxlength="40" placeholder="예: 17번 홍길동" required /></label>
+        <button type="submit">연결하기</button>
+      </form>
+      <section id="connection-card" class="connection-card idle" aria-live="polite">
+        <span class="indicator"></span>
+        <div><strong id="status-title">연결 대기</strong><p id="status-message">정보를 입력하고 연결하기를 누르세요.</p></div>
+      </section>
+      <p id="device-info" class="device-info"></p>
+    </main>
+    <script src="app.js"></script>
+  </body>
+</html>

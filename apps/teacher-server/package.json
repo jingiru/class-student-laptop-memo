@@ -1,0 +1,19 @@
+{
+  "name": "@classroom-guide/teacher-server",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test test/*.test.js",
+    "check": "node --check src/index.js && node --check src/create-server.js && node --check src/presence-store.js"
+  },
+  "dependencies": {
+    "@classroom-guide/shared": "0.1.0",
+    "express": "^5.1.0",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.1"
+  }
+}

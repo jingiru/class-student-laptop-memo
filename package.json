@@ -1,0 +1,19 @@
+{
+  "name": "classroom-guide-mvp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "교사 노트북을 로컬 서버로 사용하는 Classroom Guide MVP",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "start:teacher": "npm run start --workspace @classroom-guide/teacher-server",
+    "start:student": "npm run start --workspace @classroom-guide/student-electron",
+    "test": "npm run test --workspace @classroom-guide/teacher-server",
+    "check": "npm run check --workspace @classroom-guide/teacher-server && npm run check --workspace @classroom-guide/student-electron"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
