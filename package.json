@@ -10,7 +10,7 @@
   "scripts": {
     "start:teacher": "npm run start --workspace @classroom-guide/teacher-server",
     "start:student": "npm run start --workspace @classroom-guide/student-electron",
-    "test": "npm run test --workspace @classroom-guide/teacher-server",
+    "test": "npm run test --workspaces --if-present",
     "check": "npm run check --workspace @classroom-guide/teacher-server && npm run check --workspace @classroom-guide/student-electron"
   },
   "engines": {

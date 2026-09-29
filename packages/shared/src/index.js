@@ -16,4 +16,10 @@ const ROLES = Object.freeze({
   STUDENT: "student"
 });
 
-module.exports = { EVENTS, ROLES };
+const DISCOVERY = Object.freeze({
+  MAGIC: "CLASSROOM_GUIDE_TEACHER",
+  VERSION: 1,
+  PORT: 41234
+});
+
+module.exports = { DISCOVERY, EVENTS, ROLES };

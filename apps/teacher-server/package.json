@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node src/index.js",
     "test": "node --test test/*.test.js",
-    "check": "node --check src/index.js && node --check src/create-server.js && node --check src/presence-store.js && node --check src/stream-session-store.js"
+    "check": "node --check src/index.js && node --check src/create-server.js && node --check src/presence-store.js && node --check src/stream-session-store.js && node --check src/discovery-broadcaster.js"
   },
   "dependencies": {
     "@classroom-guide/shared": "0.1.0",

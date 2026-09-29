@@ -1,9 +1,11 @@
 const os = require("node:os");
 const { createClassroomServer } = require("./create-server");
+const { createDiscoveryBroadcaster } = require("./discovery-broadcaster");
 
 const port = Number(process.env.PORT || 3001);
 const host = process.env.HOST || "0.0.0.0";
 const { httpServer } = createClassroomServer();
+const discovery = createDiscoveryBroadcaster({ servicePort: port });
 
 function localAddresses() {
   return Object.values(os.networkInterfaces())
@@ -19,9 +21,11 @@ httpServer.listen(port, host, () => {
     console.log(`학생 서버 주소: http://${address}:${port}`);
   }
   console.log("종료하려면 Ctrl+C를 누르세요.\n");
+  discovery.start();
 });
 
 function shutdown() {
+  discovery.stop();
   httpServer.close(() => process.exit(0));
 }
 process.on("SIGINT", shutdown);

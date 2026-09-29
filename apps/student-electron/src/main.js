@@ -2,10 +2,13 @@ const { app, BrowserWindow, desktopCapturer, ipcMain, screen } = require("electr
 const path = require("node:path");
 const os = require("node:os");
 const { PresenceClient } = require("./services/presence-client");
+const { DiscoveryClient } = require("./services/discovery-client");
 
 let mainWindow;
 let overlayWindow;
 let presenceClient;
+let discoveryClient;
+let lastDiscoveredTeacher = null;
 
 function createOverlayWindow() {
   const bounds = screen.getPrimaryDisplay().bounds;
@@ -50,6 +53,9 @@ function createWindow() {
   });
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
+  mainWindow.webContents.on("did-finish-load", () => {
+    if (lastDiscoveredTeacher) mainWindow.webContents.send("discovery:found", lastDiscoveredTeacher);
+  });
   presenceClient = new PresenceClient(
     (status) => mainWindow?.webContents.send("presence:status", status),
     (type, payload) => mainWindow?.webContents.send(`stream:${type}`, payload)
@@ -63,8 +69,9 @@ ipcMain.handle("presence:connect", (_event, { serverUrl, name }) => {
     return { ok: false, message: "http://로 시작하는 올바른 서버 주소를 입력해 주세요." };
   }
   const trimmedName = String(name || "").trim();
-  if (!trimmedName) return { ok: false, message: "학생 이름을 입력해 주세요." };
-  const profile = { studentId: os.hostname(), name: trimmedName, hostname: os.hostname(), platform: process.platform };
+  if (!trimmedName) return { ok: false, message: "노트북 번호를 입력해 주세요." };
+  const displayName = /^\d+$/.test(trimmedName) ? `${trimmedName}번 노트북` : trimmedName;
+  const profile = { studentId: os.hostname(), name: displayName, hostname: os.hostname(), platform: process.platform };
   presenceClient.connect(normalizedUrl, profile);
   return { ok: true };
 });
@@ -94,12 +101,20 @@ ipcMain.on("overlay:clear", () => {
 app.whenReady().then(() => {
   createOverlayWindow();
   createWindow();
+  discoveryClient = new DiscoveryClient((teacher) => {
+    lastDiscoveredTeacher = teacher;
+    if (!mainWindow?.isDestroyed() && !mainWindow.webContents.isLoading()) {
+      mainWindow.webContents.send("discovery:found", teacher);
+    }
+  });
+  discoveryClient.start();
   screen.on("display-metrics-changed", updateOverlayBounds);
   screen.on("display-added", updateOverlayBounds);
   screen.on("display-removed", updateOverlayBounds);
 });
 app.on("window-all-closed", () => {
   presenceClient?.disconnect();
+  discoveryClient?.stop();
   if (process.platform !== "darwin") app.quit();
 });
 app.on("activate", () => {

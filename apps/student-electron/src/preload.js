@@ -15,6 +15,7 @@ contextBridge.exposeInMainWorld("classroom", {
     ipcRenderer.on("presence:status", handler);
     return () => ipcRenderer.removeListener("presence:status", handler);
   },
+  onTeacherFound: (callback) => subscribe("discovery:found", callback),
   onStreamRequest: (callback) => subscribe("stream:request", callback),
   onSignal: (callback) => subscribe("stream:signal", callback),
   onStreamStop: (callback) => subscribe("stream:stop", callback)
