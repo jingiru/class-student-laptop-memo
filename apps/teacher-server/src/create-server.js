@@ -2,7 +2,7 @@ const http = require("node:http");
 const path = require("node:path");
 const express = require("express");
 const { Server } = require("socket.io");
-const { EVENTS, ROLES } = require("@classroom-guide/shared");
+const { EVENTS, ROLES } = require("../../../packages/shared/src");
 const { PresenceStore } = require("./presence-store");
 const { StreamSessionStore } = require("./stream-session-store");
 

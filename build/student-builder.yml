@@ -1,0 +1,29 @@
+appId: com.classroomguide.student
+productName: Classroom Guide Student
+copyright: Copyright © 2026
+electronVersion: 44.5.0
+asar: true
+directories:
+  output: dist/student
+files:
+  - apps/student-electron/**/*
+  - packages/shared/**/*
+  - package.json
+extraMetadata:
+  name: classroom-guide-student
+  main: apps/student-electron/src/main.js
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: Classroom-Guide-Student-Setup-${version}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Classroom Guide Student
+  runAfterFinish: true
+  deleteAppDataOnUninstall: false

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, desktopCapturer, ipcMain, screen } = require("electron");
+const { app, BrowserWindow, desktopCapturer, ipcMain, Menu, nativeImage, screen, Tray } = require("electron");
 const path = require("node:path");
 const os = require("node:os");
 const { PresenceClient } = require("./services/presence-client");
@@ -9,6 +9,25 @@ let overlayWindow;
 let presenceClient;
 let discoveryClient;
 let lastDiscoveredTeacher = null;
+let tray;
+let isQuitting = false;
+const backgroundLaunch = process.argv.includes("--background");
+
+if (!app.requestSingleInstanceLock()) app.quit();
+
+function createTray() {
+  const icon = nativeImage.createFromDataURL(`data:image/svg+xml;base64,${Buffer.from(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"><rect width="32" height="32" rx="8" fill="#5369e8"/><path d="M7 10h18v12H7z" fill="white"/><path d="M11 25h10" stroke="white" stroke-width="2" stroke-linecap="round"/></svg>'
+  ).toString("base64")}`);
+  tray = new Tray(icon.resize({ width: 16, height: 16 }));
+  tray.setToolTip("Classroom Guide 학생");
+  tray.setContextMenu(Menu.buildFromTemplate([
+    { label: "상태 및 설정 열기", click: () => { mainWindow.show(); mainWindow.focus(); } },
+    { type: "separator" },
+    { label: "종료", click: () => { isQuitting = true; app.quit(); } }
+  ]));
+  tray.on("double-click", () => { mainWindow.show(); mainWindow.focus(); });
+}
 
 function createOverlayWindow() {
   const bounds = screen.getPrimaryDisplay().bounds;
@@ -40,6 +59,7 @@ function updateOverlayBounds() {
 
 function createWindow() {
   mainWindow = new BrowserWindow({
+    show: !backgroundLaunch,
     width: 520,
     height: 650,
     minWidth: 440,
@@ -52,6 +72,12 @@ function createWindow() {
     }
   });
   mainWindow.setMenuBarVisibility(false);
+  mainWindow.on("close", (event) => {
+    if (!isQuitting) {
+      event.preventDefault();
+      mainWindow.hide();
+    }
+  });
   mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
   mainWindow.webContents.on("did-finish-load", () => {
     if (lastDiscoveredTeacher) mainWindow.webContents.send("discovery:found", lastDiscoveredTeacher);
@@ -101,6 +127,14 @@ ipcMain.on("overlay:clear", () => {
 app.whenReady().then(() => {
   createOverlayWindow();
   createWindow();
+  createTray();
+  if (app.isPackaged) {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      path: process.execPath,
+      args: ["--background"]
+    });
+  }
   discoveryClient = new DiscoveryClient((teacher) => {
     lastDiscoveredTeacher = teacher;
     if (!mainWindow?.isDestroyed() && !mainWindow.webContents.isLoading()) {
@@ -115,8 +149,13 @@ app.whenReady().then(() => {
 app.on("window-all-closed", () => {
   presenceClient?.disconnect();
   discoveryClient?.stop();
-  if (process.platform !== "darwin") app.quit();
 });
+app.on("before-quit", () => { isQuitting = true; });
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) createWindow();
+});
+app.on("second-instance", () => {
+  if (!mainWindow) return;
+  mainWindow.show();
+  mainWindow.focus();
 });

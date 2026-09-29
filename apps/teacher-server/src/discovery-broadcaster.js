@@ -1,6 +1,6 @@
 const dgram = require("node:dgram");
 const os = require("node:os");
-const { DISCOVERY } = require("@classroom-guide/shared");
+const { DISCOVERY } = require("../../../packages/shared/src");
 
 function directedBroadcasts() {
   const addresses = new Set(["127.0.0.1", "255.255.255.255"]);

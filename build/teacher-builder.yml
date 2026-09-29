@@ -1,0 +1,30 @@
+appId: com.classroomguide.teacher
+productName: Classroom Guide Teacher
+copyright: Copyright © 2026
+electronVersion: 44.5.0
+asar: true
+directories:
+  output: dist/teacher
+files:
+  - apps/teacher-electron/**/*
+  - apps/teacher-server/**/*
+  - apps/teacher-web/**/*
+  - packages/shared/**/*
+  - package.json
+extraMetadata:
+  name: classroom-guide-teacher
+  main: apps/teacher-electron/src/main.js
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: Classroom-Guide-Teacher-Setup-${version}.${ext}
+nsis:
+  oneClick: false
+  perMachine: false
+  allowElevation: true
+  createDesktopShortcut: true
+  createStartMenuShortcut: true
+  shortcutName: Classroom Guide Teacher
+  runAfterFinish: true

@@ -1,5 +1,5 @@
 const { io } = require("socket.io-client");
-const { EVENTS, ROLES } = require("@classroom-guide/shared");
+const { EVENTS, ROLES } = require("../../../../packages/shared/src");
 
 class PresenceClient {
   constructor(onStateChange, onStreamEvent) {

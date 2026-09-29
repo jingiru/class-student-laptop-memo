@@ -1,5 +1,5 @@
 const dgram = require("node:dgram");
-const { DISCOVERY } = require("@classroom-guide/shared");
+const { DISCOVERY } = require("../../../../packages/shared/src");
 
 function parseAnnouncement(message, remoteAddress) {
   try {

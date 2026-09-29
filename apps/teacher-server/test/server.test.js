@@ -2,7 +2,7 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const { io: createClient } = require("socket.io-client");
 const { createClassroomServer } = require("../src/create-server");
-const { EVENTS, ROLES } = require("@classroom-guide/shared");
+const { EVENTS, ROLES } = require("../../../packages/shared/src");
 
 function once(socket, event) {
   return new Promise((resolve) => socket.once(event, resolve));

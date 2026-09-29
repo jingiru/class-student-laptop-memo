@@ -1,6 +1,6 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { DISCOVERY } = require("@classroom-guide/shared");
+const { DISCOVERY } = require("../../../packages/shared/src");
 const { parseAnnouncement } = require("../src/services/discovery-client");
 
 test("교사 탐색 신호의 발신 IP로 서버 주소를 만든다", () => {
