@@ -6,6 +6,7 @@ class StreamingClient {
     this.stream = null;
     this.teacherSocketId = null;
     this.pendingCandidates = [];
+    this.annotationChannel = null;
 
     api.onStreamRequest((payload) => this.start(payload.teacherSocketId));
     api.onSignal((payload) => this.handleSignal(payload));
@@ -33,6 +34,17 @@ class StreamingClient {
       this.onStateChange(true, "교사가 화면을 확인하고 있습니다.");
       this.reportStatus("captured", "화면 캡처 완료 · WebRTC 연결 중…");
       this.peer = new RTCPeerConnection({ iceServers: [] });
+      this.annotationChannel = this.peer.createDataChannel("classroom-annotations", { ordered: true });
+      this.annotationChannel.onmessage = ({ data }) => {
+        try {
+          const command = JSON.parse(data);
+          if (command.type === "clear") this.api.clearAnnotations();
+          else this.api.renderAnnotation(command);
+        } catch (error) {
+          console.error("주석 데이터 처리 실패", error);
+        }
+      };
+      this.annotationChannel.onclose = () => this.api.clearAnnotations();
       this.stream.getTracks().forEach((track) => this.peer.addTrack(track, this.stream));
       this.stream.getVideoTracks()[0].addEventListener("ended", () => this.stop(true), { once: true });
       this.peer.onicecandidate = ({ candidate }) => {
@@ -90,8 +102,11 @@ class StreamingClient {
     const teacherSocketId = this.teacherSocketId;
     this.peer?.close();
     this.stream?.getTracks().forEach((track) => track.stop());
+    this.annotationChannel?.close();
+    this.api.clearAnnotations();
     this.peer = null;
     this.stream = null;
+    this.annotationChannel = null;
     this.teacherSocketId = null;
     this.pendingCandidates = [];
     this.onStateChange(false, "");

@@ -36,10 +36,23 @@
           <div><p class="eyebrow">LIVE SCREEN</p><h2 id="viewer-title">학생 화면</h2></div>
           <div class="viewer-actions"><span id="viewer-status">연결 중…</span><button id="close-viewer" type="button">화면 닫기</button></div>
         </div>
-        <div class="video-frame"><video id="student-video" autoplay playsinline></video></div>
+        <div id="annotation-toolbar" class="annotation-toolbar" aria-label="화면 주석 도구">
+          <button type="button" class="tool active" data-tool="pen">펜</button>
+          <button type="button" class="tool" data-tool="arrow">화살표</button>
+          <button type="button" class="tool" data-tool="text">텍스트</button>
+          <input id="annotation-text" type="text" maxlength="40" placeholder="표시할 글자" aria-label="표시할 글자" />
+          <label class="color-label">색상 <input id="annotation-color" type="color" value="#ff3b30" /></label>
+          <button id="clear-annotations" type="button">모두 지우기</button>
+          <span id="annotation-status">주석 연결 대기 중</span>
+        </div>
+        <div class="video-frame">
+          <video id="student-video" autoplay playsinline></video>
+          <canvas id="annotation-canvas" aria-label="학생 화면 주석 영역"></canvas>
+        </div>
       </section>
     </main>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="annotations.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

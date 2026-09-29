@@ -8,6 +8,8 @@ contextBridge.exposeInMainWorld("classroom", {
   sendSignal: (payload) => ipcRenderer.send("webrtc:signal", payload),
   notifyStreamEnded: (teacherSocketId) => ipcRenderer.send("stream:ended", teacherSocketId),
   notifyStreamStatus: (payload) => ipcRenderer.send("stream:status", payload),
+  renderAnnotation: (command) => ipcRenderer.send("overlay:draw", command),
+  clearAnnotations: () => ipcRenderer.send("overlay:clear"),
   onStatus: (callback) => {
     const handler = (_event, status) => callback(status);
     ipcRenderer.on("presence:status", handler);

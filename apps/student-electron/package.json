@@ -5,7 +5,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "check": "node --check src/main.js && node --check src/preload.js && node --check src/services/presence-client.js && node --check renderer/app.js && node --check renderer/streaming-client.js"
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/overlay-preload.js && node --check src/services/presence-client.js && node --check renderer/app.js && node --check renderer/streaming-client.js && node --check overlay/app.js"
   },
   "dependencies": {
     "@classroom-guide/shared": "0.1.0",

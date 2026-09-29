@@ -6,6 +6,12 @@ const viewerElement = document.querySelector("#viewer");
 const videoElement = document.querySelector("#student-video");
 const viewerTitle = document.querySelector("#viewer-title");
 const viewerStatus = document.querySelector("#viewer-status");
+const annotationController = new window.AnnotationController({
+  canvas: document.querySelector("#annotation-canvas"),
+  video: videoElement,
+  toolbar: document.querySelector("#annotation-toolbar"),
+  status: document.querySelector("#annotation-status")
+});
 let activeStudent = null;
 let peer = null;
 let pendingCandidates = [];
@@ -53,7 +59,11 @@ function startViewing(student) {
   viewerElement.hidden = false;
   viewerTitle.textContent = `${student.name} 화면`;
   viewerStatus.textContent = "화면 연결 요청 중…";
+  annotationController.detach();
   peer = new RTCPeerConnection({ iceServers: [] });
+  peer.ondatachannel = ({ channel }) => {
+    if (channel.label === "classroom-annotations") annotationController.setChannel(channel);
+  };
   peer.ontrack = ({ streams }) => {
     videoElement.srcObject = streams[0];
     viewerStatus.textContent = "실시간 연결됨";
@@ -107,6 +117,7 @@ async function handleSignal({ fromSocketId, description, candidate }) {
 
 function stopViewing(notifyStudent = true) {
   if (notifyStudent && activeStudent) socket.emit("stream:stop", { studentSocketId: activeStudent.socketId });
+  annotationController.detach();
   peer?.close();
   peer = null;
   pendingCandidates = [];
@@ -126,6 +137,7 @@ socket.on("stream:ended", () => {
   peer?.close();
   peer = null;
   videoElement.srcObject = null;
+  annotationController.detach();
 });
 document.querySelector("#close-viewer").addEventListener("click", () => stopViewing());
 window.addEventListener("beforeunload", () => stopViewing());
