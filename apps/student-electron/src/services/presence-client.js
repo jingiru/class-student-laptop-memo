@@ -2,9 +2,10 @@ const { io } = require("socket.io-client");
 const { EVENTS, ROLES } = require("@classroom-guide/shared");
 
 class PresenceClient {
-  constructor(onStateChange) {
+  constructor(onStateChange, onStreamEvent) {
     this.socket = null;
     this.onStateChange = onStateChange;
+    this.onStreamEvent = onStreamEvent;
   }
 
   connect(serverUrl, profile) {
@@ -28,6 +29,21 @@ class PresenceClient {
     this.socket.on("connect_error", () => {
       this.onStateChange({ state: "error", message: "교사 서버를 찾을 수 없습니다." });
     });
+    this.socket.on(EVENTS.STREAM_REQUEST, (payload) => this.onStreamEvent("request", payload));
+    this.socket.on(EVENTS.WEBRTC_SIGNAL, (payload) => this.onStreamEvent("signal", payload));
+    this.socket.on(EVENTS.STREAM_STOP, (payload) => this.onStreamEvent("stop", payload));
+  }
+
+  sendSignal(payload) {
+    this.socket?.emit(EVENTS.WEBRTC_SIGNAL, payload);
+  }
+
+  notifyStreamEnded(teacherSocketId) {
+    this.socket?.emit(EVENTS.STREAM_ENDED, { teacherSocketId });
+  }
+
+  notifyStreamStatus(payload) {
+    this.socket?.emit(EVENTS.STREAM_STATUS, payload);
   }
 
   disconnect() {

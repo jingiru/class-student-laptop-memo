@@ -4,6 +4,9 @@ const nameInput = document.querySelector("#student-name");
 const card = document.querySelector("#connection-card");
 const title = document.querySelector("#status-title");
 const message = document.querySelector("#status-message");
+const sharingCard = document.querySelector("#sharing-card");
+const sharingTitle = document.querySelector("#sharing-title");
+const sharingMessage = document.querySelector("#sharing-message");
 
 serverInput.value = localStorage.getItem("serverUrl") || "http://localhost:3001";
 nameInput.value = localStorage.getItem("studentName") || "";
@@ -30,4 +33,11 @@ form.addEventListener("submit", async (event) => {
 
 window.classroom.getDeviceInfo().then((device) => {
   document.querySelector("#device-info").textContent = `이 기기: ${device.hostname}`;
+});
+
+new window.StreamingClient(window.classroom, (isSharing, text) => {
+  sharingCard.hidden = !isSharing && !text;
+  sharingCard.className = `sharing-card${!isSharing && text ? " error" : ""}`;
+  sharingTitle.textContent = isSharing ? "화면 공유 중" : "화면 공유 실패";
+  if (text) sharingMessage.textContent = text;
 });

@@ -1,6 +1,6 @@
 # Classroom Guide MVP
 
-교사 Windows 노트북을 로컬 서버로 사용하고, 학생 Electron 앱의 온라인 상태를 교사 화면에서 실시간으로 확인하는 1단계 구현입니다.
+교사 Windows 노트북을 로컬 서버로 사용하고, 학생 Electron 앱의 온라인 상태와 화면을 교사 화면에서 실시간으로 확인하는 MVP입니다.
 
 ## 구성
 
@@ -9,7 +9,7 @@
 - `apps/student-electron`: 학생용 Windows Electron 클라이언트
 - `packages/shared`: 양쪽에서 공유하는 이벤트 이름과 역할 정의
 
-화면 스트리밍은 추후 학생 앱의 별도 `streaming` 서비스와 교사 화면의 뷰어 영역으로, 투명 오버레이는 Electron의 별도 overlay window/service로 추가할 수 있습니다. 현재 presence 모듈과 직접 얽히지 않도록 분리했습니다.
+학생 영상은 서버에 업로드하지 않고 WebRTC로 학생과 교사 사이에 직접 전송됩니다. 서버는 접속 상태와 WebRTC signaling만 중계합니다. 화면 스트리밍은 Presence와 분리되어 있어 투명 오버레이를 별도 창으로 추가할 수 있습니다.
 
 ## 준비
 
@@ -39,7 +39,17 @@ Windows 방화벽이 묻는 경우 학교/개인 네트워크에서 Node.js의 �
 npm run start:student
 ```
 
+Electron 44가 `Sandboxed processes cannot read ... ALL APPLICATION PACKAGES` 오류로 종료되는 Windows 환경에서는 관리자 권한 PowerShell에서 아래 명령을 한 번 실행합니다.
+
+```powershell
+icacls "D:\project_clone\cslm\node_modules\electron\dist" /grant "*S-1-15-2-1:(OI)(CI)(RX)"
+```
+
+이는 Chromium 샌드박스를 끄는 대신 Electron 실행 폴더에 Windows 앱 컨테이너의 읽기·실행 권한만 추가합니다. 프로젝트 경로가 다르면 명령의 경로도 실제 위치에 맞게 바꿉니다.
+
 교사가 알려준 주소(예: `http://192.168.0.10:3001`)와 학생 이름을 입력하고 **연결하기**를 누릅니다.
+
+교사 화면의 학생 카드에서 **화면 보기**를 누르면 해당 학생의 전체 화면이 나타납니다. 같은 노트북에서 시험할 때는 학생 서버 주소로 `http://localhost:3001`을 사용합니다.
 
 ## 확인
 
@@ -48,12 +58,11 @@ npm test
 npm run check
 ```
 
-자동 테스트는 학생 접속 시 ONLINE 목록 추가, 연결 종료 시 제거, 잘못된 접속 정보 거부를 검증합니다.
+자동 테스트는 학생 접속 시 ONLINE 목록 추가, 연결 종료 시 제거, 잘못된 접속 정보 거부, 화면 요청 및 WebRTC signaling 중계를 검증합니다.
 
 ## 다음 확장 지점
 
-1. `student-electron/src/services/streaming-client.js`: `desktopCapturer` + WebRTC 송출
-2. `teacher-server`: offer/answer/ICE signaling 이벤트 중계(영상 자체는 중계하지 않음)
-3. `teacher-web`: 선택 학생의 `RTCPeerConnection`과 영상 뷰어
-4. `student-electron`: click-through 투명 BrowserWindow와 annotation DataChannel
-5. 수업 코드 또는 사전 공유 토큰을 이용한 LAN 접속 인증
+1. `student-electron`: click-through 투명 BrowserWindow와 annotation DataChannel
+2. 수업 코드 또는 사전 공유 토큰을 이용한 LAN 접속 인증
+3. 여러 화면이 연결된 학생 기기의 화면 선택
+4. Windows 설치 파일 패키징과 자동 업데이트

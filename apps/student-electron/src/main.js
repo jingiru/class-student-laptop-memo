@@ -1,10 +1,11 @@
-const { app, BrowserWindow, ipcMain } = require("electron");
+const { app, BrowserWindow, desktopCapturer, ipcMain } = require("electron");
 const path = require("node:path");
 const os = require("node:os");
 const { PresenceClient } = require("./services/presence-client");
 
 let mainWindow;
 let presenceClient;
+
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -21,7 +22,10 @@ function createWindow() {
   });
   mainWindow.setMenuBarVisibility(false);
   mainWindow.loadFile(path.join(__dirname, "../renderer/index.html"));
-  presenceClient = new PresenceClient((status) => mainWindow?.webContents.send("presence:status", status));
+  presenceClient = new PresenceClient(
+    (status) => mainWindow?.webContents.send("presence:status", status),
+    (type, payload) => mainWindow?.webContents.send(`stream:${type}`, payload)
+  );
 }
 
 ipcMain.handle("device:info", () => ({ hostname: os.hostname(), platform: process.platform }));
@@ -37,6 +41,17 @@ ipcMain.handle("presence:connect", (_event, { serverUrl, name }) => {
   return { ok: true };
 });
 ipcMain.handle("presence:disconnect", () => presenceClient.disconnect());
+ipcMain.handle("capture:get-source", async () => {
+  const sources = await desktopCapturer.getSources({
+    types: ["screen"],
+    thumbnailSize: { width: 0, height: 0 }
+  });
+  if (!sources.length) throw new Error("캡처할 화면을 찾을 수 없습니다.");
+  return { id: sources[0].id, name: sources[0].name };
+});
+ipcMain.on("webrtc:signal", (_event, payload) => presenceClient.sendSignal(payload));
+ipcMain.on("stream:ended", (_event, teacherSocketId) => presenceClient.notifyStreamEnded(teacherSocketId));
+ipcMain.on("stream:status", (_event, payload) => presenceClient.notifyStreamStatus(payload));
 
 app.whenReady().then(createWindow);
 app.on("window-all-closed", () => {

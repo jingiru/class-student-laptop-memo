@@ -18,3 +18,10 @@ button:hover { background: #4359d1; }
 .connection-card.error .indicator, .connection-card.offline .indicator { background: #d84c4c; }
 .connection-card p { margin: 4px 0 0; color: #778196; font-size: 12px; }
 .device-info { text-align: center; color: #9ba4b4; font-size: 11px; margin-top: 20px; }
+.sharing-card { display: flex; gap: 14px; align-items: center; margin-top: 12px; padding: 17px; color: #71351d; background: #fff0e5; border: 1px solid #ffd1b5; border-radius: 12px; }
+.sharing-card[hidden] { display: none; }
+.sharing-icon { color: #ed6a32; animation: pulse 1.5s ease-in-out infinite; }
+.sharing-card p { margin: 4px 0 0; font-size: 12px; }
+.sharing-card.error { color: #842b2b; background: #ffeaea; border-color: #ffc5c5; }
+.sharing-card.error .sharing-icon { color: #d84c4c; animation: none; }
+@keyframes pulse { 50% { opacity: .35; } }

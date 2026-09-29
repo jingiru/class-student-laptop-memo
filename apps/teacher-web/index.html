@@ -30,6 +30,14 @@
         </div>
         <div id="student-grid" class="student-grid" hidden></div>
       </section>
+
+      <section id="viewer" class="viewer" hidden>
+        <div class="viewer-header">
+          <div><p class="eyebrow">LIVE SCREEN</p><h2 id="viewer-title">학생 화면</h2></div>
+          <div class="viewer-actions"><span id="viewer-status">연결 중…</span><button id="close-viewer" type="button">화면 닫기</button></div>
+        </div>
+        <div class="video-frame"><video id="student-video" autoplay playsinline></video></div>
+      </section>
     </main>
     <script src="/socket.io/socket.io.js"></script>
     <script src="app.js"></script>

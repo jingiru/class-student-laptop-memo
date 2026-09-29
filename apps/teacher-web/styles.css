@@ -23,4 +23,14 @@ h1 { font-size: clamp(30px, 4vw, 44px); margin: 0; letter-spacing: -.04em; }
 .online-dot { width: 10px; height: 10px; background: #25ba74; border-radius: 50%; box-shadow: 0 0 0 5px #25ba741b; }
 .device { margin: 12px 0 0; font-size: 13px; color: #768197; }
 .connected { margin: 5px 0 0; font-size: 12px; color: #9aa3b4; }
+.watch-button { width: 100%; margin-top: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: #eef1ff; color: #4057d0; font-weight: 750; cursor: pointer; }
+.watch-button:hover { background: #dfe4ff; }
+.viewer { margin-top: 28px; padding: 22px; color: white; background: #121827; border-radius: 18px; box-shadow: 0 16px 44px #15213c35; }
+.viewer[hidden] { display: none; }
+.viewer-header { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin-bottom: 18px; }
+.viewer-header h2 { margin: 2px 0 0; font-size: 22px; }
+.viewer-actions { display: flex; align-items: center; gap: 14px; color: #aab4ca; font-size: 13px; }
+.viewer-actions button { padding: 9px 13px; border: 1px solid #47516a; border-radius: 8px; color: white; background: transparent; cursor: pointer; }
+.video-frame { display: grid; place-items: center; min-height: 360px; overflow: hidden; background: #070a11; border-radius: 12px; }
+.video-frame video { display: block; width: 100%; max-height: 72vh; object-fit: contain; }
 @media (max-width: 620px) { header { flex-direction: column; } main { padding-top: 30px; } }
